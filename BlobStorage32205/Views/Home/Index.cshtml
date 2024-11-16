@@ -1,0 +1,37 @@
+﻿@model List<string>
+
+<h2>Upload Video</h2>
+<form method="post" enctype="multipart/form-data" asp-action="UploadVideo">
+    <input type="file" name="file" accept="video/*" />
+    <button type="submit">Upload Video</button>
+</form>
+
+<hr />
+
+<h2>Video Gallery</h2>
+
+@if (Model != null && Model.Any())
+{
+    <ul>
+        @foreach (var fileUrl in Model)
+        {
+            var fileName = System.IO.Path.GetFileName(fileUrl);
+            <li>
+                <video width="320" height="240" controls>
+                    <source src="@fileUrl" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <br />
+                <a asp-action="DownloadVideo" asp-route-fileName="@fileName">Download</a>
+
+                <form method="post" asp-action="DeleteVideo" asp-route-fileName="@fileName" style="display:inline;">
+                    <button type="submit">Delete</button>
+                </form>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No videos uploaded yet</p>
+}
